@@ -58,6 +58,24 @@ class GetNumbersTicket(unittest.TestCase):
 		self.assertEqual(len(set(result)), 5)
 		self.assertTrue(all(1 <= n <= 36 for n in result))
 
+	def test_quantity_equals_min(self):
+		""" quantity == min: minimum number of tickets """
+
+		result = get_numbers_ticket(9, 100, 9)
+		self.assertEqual(len(result), 9)
+
+	def test_quantity_equals_max(self):
+		""" quantity == max: maximum number of tickets """
+
+		result = get_numbers_ticket(1, 99, 99)
+		self.assertEqual(len(result), 99)
+
+	def test_one_number(self):
+		""" min == max == quantity == 88 : only one number in the ticket """
+
+		result = get_numbers_ticket(88, 88, 1)
+		self.assertEqual(result, [88])
+
 
 class NormalizePhone(unittest.TestCase):
 	pass
