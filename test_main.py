@@ -1,7 +1,7 @@
 import unittest
 from datetime import date
 
-from main import get_days_from_today, get_numbers_ticket
+from main import get_days_from_today, get_numbers_ticket, normalize_phone
 
 
 class GetDaysFromToday(unittest.TestCase):
@@ -9,35 +9,47 @@ class GetDaysFromToday(unittest.TestCase):
 
 	def test_past_day(self):
 		"""Test with a past date to ensure it returns a negative number of days."""
-		result = get_days_from_today("2021-10-09")
+
+		test_date = "2021-10-09"
+		expected = (date.fromisoformat(test_date) - date.today()).days
+		result = get_days_from_today(test_date)
 		self.assertIsInstance(result, int)
-		self.assertEqual(result, -1640)
+		self.assertEqual(result, expected)
 
 	def test_today(self):
 		"""Test with a today date to ensure it returns zero number of days."""
+
 		result = get_days_from_today(str(date.today()))
 		self.assertIsInstance(result, int)
 		self.assertEqual(result, 0)
 
 	def test_future_day(self):
 		"""Test with a future date to ensure it returns a positive number of days."""
-		result = get_days_from_today("2028-12-09")
+
+		test_date = "2028-12-09"
+		result = get_days_from_today(test_date)
 		self.assertIsInstance(result, int)
 		self.assertGreater(result, 0)
 
 	def test_invalid_month(self):
 		"""Test with an invalid month to ensure it returns correct message."""
-		self.assertIsNone(get_days_from_today("2020-20-20"))
+
+		test_date = "2020-20-20"
+		self.assertIsNone(get_days_from_today(test_date))
 
 	def test_valid_leap_year(self):
 		"""Test with a valid leap year to ensure it returns correct message."""
-		result = get_days_from_today("2020-02-29")
+
+		test_date = "2020-02-29"
+		result = get_days_from_today(test_date)
 		self.assertIsInstance(result, int)
 		self.assertLess(result, 0)
 
 	def test_invalid_leap_year(self):
 		"""Test with an invalid leap year to ensure it returns correct message."""
-		self.assertIsNone(get_days_from_today("2021-02-29"))
+
+		test_date = "2021-02-29"
+		self.assertIsNone(get_days_from_today(test_date))
 
 
 class GetNumbersTicket(unittest.TestCase):
@@ -139,10 +151,17 @@ class GetNumbersTicket(unittest.TestCase):
 
 
 class NormalizePhone(unittest.TestCase):
-	pass
+	"""Test cases for the normalize_phone function."""
+
+	def test_local_phone_number(self):
+		self.assertEqual(normalize_phone("067\\t123 4567"), "+380671234567")
+
+	def test_number_with_brackets_and_newline(self):
+		self.assertEqual(normalize_phone("(095) 234-5678\n"), "+380952345678")
 
 
 class GetUpcomingBirthdays(unittest.TestCase):
+	"""Test cases for the get_upcoming_birthdays function."""
 	pass
 
 
