@@ -93,6 +93,48 @@ class GetNumbersTicket(unittest.TestCase):
 		result = get_numbers_ticket(1, 1000, 24)
 		self.assertEqual(result, sorted(result))
 
+	def test_min_less_than_1(self):
+		""" min less than 1: invalid parameter """
+
+		self.assertEqual(get_numbers_ticket(0, 99, 20), [])
+
+	def test_min_negative(self):
+		""" min negative: invalid parameter """
+
+		self.assertEqual(get_numbers_ticket(-1, 99, 20), [])
+
+	def test_max_grater_than_1000(self):
+		""" max greater than 1000: invalid parameter """
+
+		self.assertEqual(get_numbers_ticket(1, 1001, 20), [])
+
+	def test_quantity_less_than_min(self):
+		""" quantity < min: quantity less than minimin invalid parameter """
+
+		self.assertEqual(get_numbers_ticket(5, 100, 4), [])
+
+	def test_min_greater_than_max(self):
+		""" min greater than max: invalid parameter """
+
+		self.assertEqual(get_numbers_ticket(19, 18, 5), [])
+
+	def test_zero_quantity(self):
+		""" zero quantity: invalid parameter """
+
+		self.assertEqual(get_numbers_ticket(1, 99, 0), [])
+
+	def test_min_equals_max_quantity_invalid(self):
+		""" min equals max but quantity not equals min: invalid parameter """
+
+		self.assertEqual(get_numbers_ticket(7, 7, 4), [])
+
+	def test_max_exactly_1000_quantity_equal_max(self):
+		""" max exactly 1000 and quantity == max: invalid parameter """
+
+		result = get_numbers_ticket(1, 1000, 1000)
+		self.assertEqual(len(result), 1000)
+
+
 class NormalizePhone(unittest.TestCase):
 	pass
 
