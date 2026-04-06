@@ -5,6 +5,8 @@ from main import get_days_from_today, get_numbers_ticket
 
 
 class GetDaysFromToday(unittest.TestCase):
+	""" Test cases for the get_days_from_today function. """
+
 	def test_past_day(self):
 		"""Test with a past date to ensure it returns a negative number of days."""
 		result = get_days_from_today("2021-10-09")
@@ -39,6 +41,7 @@ class GetDaysFromToday(unittest.TestCase):
 
 
 class GetNumbersTicket(unittest.TestCase):
+	"""Test cases for the get_numbers_ticket function."""
 
 	def test_common_lottery_6_of_49(self):
 		"""Common lottery: 6 numbers from 1 to 49"""
@@ -144,4 +147,4 @@ class GetUpcomingBirthdays(unittest.TestCase):
 
 
 if __name__ == "__main__":
-	unittest.main()
+	unittest.main(verbosity=2)
