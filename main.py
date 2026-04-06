@@ -32,8 +32,8 @@ def get_numbers_ticket(min: int, max: int, quantity: int) -> list[int]:
 def normalize_phone(phone_number: str) -> str:
 	"""Function to normalize the phone number"""
 
-	modified_text = re.sub(r"\D", "", phone_number).strip()
-	modified_text = re.sub(r"^38?", "", modified_text)
+	modified_text = re.sub(r"\D", "", phone_number)
+	modified_text = re.sub(r"^38", "", modified_text)
 	modified_text = "+38" + modified_text
 	return modified_text
 
