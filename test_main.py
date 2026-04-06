@@ -93,12 +93,14 @@ class GetNumbersTicket(unittest.TestCase):
 
 	def test_max_boundary(self):
 		"""max == 1000: maximum boundary for max parameter"""
+
 		result = get_numbers_ticket(1, 1000, 21)
 		self.assertEqual(len(result), 21)
 		self.assertTrue(all(1 <= n <= 1000 for n in result))
 
 	def test_min_boundary(self):
 		"""min == 1: minimum boundary for min parameter"""
+
 		result = get_numbers_ticket(1, 100, 13)
 		self.assertEqual(len(result), 13)
 
