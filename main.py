@@ -3,6 +3,8 @@ from random import randint
 
 
 def get_days_from_today(date: str) -> int | None:
+	"""Calculate the number of days from today to the given date."""
+
 	try:
 		user_date = datetime.strptime(date, "%Y-%m-%d").date()
 	except ValueError as e:
@@ -14,6 +16,7 @@ def get_days_from_today(date: str) -> int | None:
 
 
 def get_numbers_ticket(min: int, max: int, quantity: int) -> list[int]:
+	""" Calculate the numbers of tickets from the given min and max dates."""
 	if min < 1 or max > 1000 or not (min <= quantity <= max):
 		return []
 
