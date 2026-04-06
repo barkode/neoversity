@@ -73,9 +73,25 @@ class GetNumbersTicket(unittest.TestCase):
 	def test_one_number(self):
 		""" min == max == quantity == 88 : only one number in the ticket """
 
-		result = get_numbers_ticket(88, 88, 1)
-		self.assertEqual(result, [88])
+		result = get_numbers_ticket(1, 1, 1)
+		self.assertEqual(result, [1])
 
+	def test_max_boundary(self):
+		"""max == 1000: maximum boundary for max parameter"""
+		result = get_numbers_ticket(1, 1000, 21)
+		self.assertEqual(len(result), 21)
+		self.assertTrue(all(1 <= n <= 1000 for n in result))
+
+	def test_min_boundary(self):
+		"""min == 1: minimum boundary for min parameter"""
+		result = get_numbers_ticket(1, 100, 13)
+		self.assertEqual(len(result), 13)
+
+	def test_result_is_sorted(self):
+		""" result == sorted """
+
+		result = get_numbers_ticket(1, 1000, 24)
+		self.assertEqual(result, sorted(result))
 
 class NormalizePhone(unittest.TestCase):
 	pass
