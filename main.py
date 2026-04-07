@@ -75,34 +75,3 @@ def get_upcoming_birthdays(users: list[dict]) -> list[dict]:
             continue
 
     return upcoming_birthdays
-
-
-'''
-if birthday == birthday.timedelta(days=7):
-    print('Hello')
-    upcoming_birthdays.append(user)
-    upcoming_birthdays.append(user)
-    month = today_date.month
-    day = today_date.day
-    delta_date = (today_date - birthday)
-    congratulation_date = None 
-    upcoming_birthdays.append({
-    "name": name,
-    'congratulation_date': congratulation_date,
-    "delta_date": delta_date,
-    "month": month,
-    "day": day
-    })
-    return upcoming_birthdays
-'''
-
-users = [
-    {"name": "John Doe", "birthday": "1985.01.23"},
-    {"name": "Jane Smith", "birthday": "1990.01.27"},
-    {"name": "Martin Six", "birthday": "1991.04.10"},
-    {"name": "Louise Lane", "birthday": "1992.04.09"},
-    {"name": "Dark Shadow", "birthday": "1993.04.08"}
-    ]
-
-upcoming_birthdays = get_upcoming_birthdays(users)
-print("Список привітань на цьому тижні:", upcoming_birthdays)
