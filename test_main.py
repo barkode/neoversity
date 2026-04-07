@@ -1,171 +1,207 @@
 import unittest
-from datetime import date
+from datetime import date, datetime
+from unittest.mock import patch
 
-from main import get_days_from_today, get_numbers_ticket, normalize_phone
+from main import get_days_from_today, get_numbers_ticket, \
+    get_upcoming_birthdays, normalize_phone
 
 
 class GetDaysFromToday(unittest.TestCase):
-	""" Test cases for the get_days_from_today function. """
+    """ Test cases for the get_days_from_today function. """
 
-	def test_past_day(self):
-		"""Test with a past date to ensure it returns a negative number of days."""
+    def test_past_day(self):
+        """Test with a past date to ensure it returns a negative number of days."""
 
-		test_date = "2021-10-09"
-		expected = (date.fromisoformat(test_date) - date.today()).days
-		result = get_days_from_today(test_date)
-		self.assertIsInstance(result, int)
-		self.assertEqual(result, expected)
+        test_date = "2021-10-09"
+        expected = (date.fromisoformat(test_date) - date.today()).days
+        result = get_days_from_today(test_date)
+        self.assertIsInstance(result, int)
+        self.assertEqual(result, expected)
 
-	def test_today(self):
-		"""Test with a today date to ensure it returns zero number of days."""
+    def test_today(self):
+        """Test with a today date to ensure it returns zero number of days."""
 
-		result = get_days_from_today(str(date.today()))
-		self.assertIsInstance(result, int)
-		self.assertEqual(result, 0)
+        result = get_days_from_today(str(date.today()))
+        self.assertIsInstance(result, int)
+        self.assertEqual(result, 0)
 
-	def test_future_day(self):
-		"""Test with a future date to ensure it returns a positive number of days."""
+    def test_future_day(self):
+        """Test with a future date to ensure it returns a positive number of days."""
 
-		test_date = "2028-12-09"
-		result = get_days_from_today(test_date)
-		self.assertIsInstance(result, int)
-		self.assertGreater(result, 0)
+        test_date = "2028-12-09"
+        result = get_days_from_today(test_date)
+        self.assertIsInstance(result, int)
+        self.assertGreater(result, 0)
 
-	def test_invalid_month(self):
-		"""Test with an invalid month to ensure it returns correct message."""
+    def test_invalid_month(self):
+        """Test with an invalid month to ensure it returns correct message."""
 
-		test_date = "2020-20-20"
-		self.assertIsNone(get_days_from_today(test_date))
+        test_date = "2020-20-20"
+        self.assertIsNone(get_days_from_today(test_date))
 
-	def test_valid_leap_year(self):
-		"""Test with a valid leap year to ensure it returns correct message."""
+    def test_valid_leap_year(self):
+        """Test with a valid leap year to ensure it returns correct message."""
 
-		test_date = "2020-02-29"
-		result = get_days_from_today(test_date)
-		self.assertIsInstance(result, int)
-		self.assertLess(result, 0)
+        test_date = "2020-02-29"
+        result = get_days_from_today(test_date)
+        self.assertIsInstance(result, int)
+        self.assertLess(result, 0)
 
-	def test_invalid_leap_year(self):
-		"""Test with an invalid leap year to ensure it returns correct message."""
+    def test_invalid_leap_year(self):
+        """Test with an invalid leap year to ensure it returns correct message."""
 
-		test_date = "2021-02-29"
-		self.assertIsNone(get_days_from_today(test_date))
+        test_date = "2021-02-29"
+        self.assertIsNone(get_days_from_today(test_date))
 
 
 class GetNumbersTicket(unittest.TestCase):
-	"""Test cases for the get_numbers_ticket function."""
+    """Test cases for the get_numbers_ticket function."""
 
-	def test_common_lottery_6_of_49(self):
-		"""Common lottery: 6 numbers from 1 to 49"""
+    def test_common_lottery_6_of_49(self):
+        """Common lottery: 6 numbers from 1 to 49"""
 
-		result = get_numbers_ticket(1, 49, 6)
-		self.assertEqual(len(result), 6)
-		self.assertEqual(result, sorted(result))
-		self.assertEqual(len(set(result)), 6)
-		self.assertTrue(all(1 <= n <= 49 for n in result))
+        result = get_numbers_ticket(1, 49, 6)
+        self.assertEqual(len(result), 6)
+        self.assertEqual(result, sorted(result))
+        self.assertEqual(len(set(result)), 6)
+        self.assertTrue(all(1 <= n <= 49 for n in result))
 
-	def test_common_lottery_5_of_36(self):
-		""" Common lottery: 5 numbers from 1 to 36 """
+    def test_common_lottery_5_of_36(self):
+        """ Common lottery: 5 numbers from 1 to 36 """
 
-		result = get_numbers_ticket(1, 36, 5)
-		self.assertEqual(len(result), 5)
-		self.assertEqual(result, sorted(result))
-		self.assertEqual(len(set(result)), 5)
-		self.assertTrue(all(1 <= n <= 36 for n in result))
+        result = get_numbers_ticket(1, 36, 5)
+        self.assertEqual(len(result), 5)
+        self.assertEqual(result, sorted(result))
+        self.assertEqual(len(set(result)), 5)
+        self.assertTrue(all(1 <= n <= 36 for n in result))
 
-	def test_quantity_equals_min(self):
-		""" quantity == min: minimum number of tickets """
+    def test_quantity_equals_min(self):
+        """ quantity == min: minimum number of tickets """
 
-		result = get_numbers_ticket(9, 100, 9)
-		self.assertEqual(len(result), 9)
+        result = get_numbers_ticket(9, 100, 9)
+        self.assertEqual(len(result), 9)
 
-	def test_quantity_equals_max(self):
-		""" quantity == max: maximum number of tickets """
+    def test_quantity_equals_max(self):
+        """ quantity == max: maximum number of tickets """
 
-		result = get_numbers_ticket(1, 99, 99)
-		self.assertEqual(len(result), 99)
+        result = get_numbers_ticket(1, 99, 99)
+        self.assertEqual(len(result), 99)
 
-	def test_one_number(self):
-		""" min == max == quantity == 88 : only one number in the ticket """
+    def test_one_number(self):
+        """ min == max == quantity == 88 : only one number in the ticket """
 
-		result = get_numbers_ticket(1, 1, 1)
-		self.assertEqual(result, [1])
+        result = get_numbers_ticket(1, 1, 1)
+        self.assertEqual(result, [1])
 
-	def test_max_boundary(self):
-		"""max == 1000: maximum boundary for max parameter"""
+    def test_max_boundary(self):
+        """max == 1000: maximum boundary for max parameter"""
 
-		result = get_numbers_ticket(1, 1000, 21)
-		self.assertEqual(len(result), 21)
-		self.assertTrue(all(1 <= n <= 1000 for n in result))
+        result = get_numbers_ticket(1, 1000, 21)
+        self.assertEqual(len(result), 21)
+        self.assertTrue(all(1 <= n <= 1000 for n in result))
 
-	def test_min_boundary(self):
-		"""min == 1: minimum boundary for min parameter"""
+    def test_min_boundary(self):
+        """min == 1: minimum boundary for min parameter"""
 
-		result = get_numbers_ticket(1, 100, 13)
-		self.assertEqual(len(result), 13)
+        result = get_numbers_ticket(1, 100, 13)
+        self.assertEqual(len(result), 13)
 
-	def test_result_is_sorted(self):
-		""" result == sorted """
+    def test_result_is_sorted(self):
+        """ result == sorted """
 
-		result = get_numbers_ticket(1, 1000, 24)
-		self.assertEqual(result, sorted(result))
+        result = get_numbers_ticket(1, 1000, 24)
+        self.assertEqual(result, sorted(result))
 
-	def test_min_less_than_1(self):
-		""" min less than 1: invalid parameter """
+    def test_min_less_than_1(self):
+        """ min less than 1: invalid parameter """
 
-		self.assertEqual(get_numbers_ticket(0, 99, 20), [])
+        self.assertEqual(get_numbers_ticket(0, 99, 20), [])
 
-	def test_min_negative(self):
-		""" min negative: invalid parameter """
+    def test_min_negative(self):
+        """ min negative: invalid parameter """
 
-		self.assertEqual(get_numbers_ticket(-1, 99, 20), [])
+        self.assertEqual(get_numbers_ticket(-1, 99, 20), [])
 
-	def test_max_grater_than_1000(self):
-		""" max greater than 1000: invalid parameter """
+    def test_max_grater_than_1000(self):
+        """ max greater than 1000: invalid parameter """
 
-		self.assertEqual(get_numbers_ticket(1, 1001, 20), [])
+        self.assertEqual(get_numbers_ticket(1, 1001, 20), [])
 
-	def test_quantity_less_than_min(self):
-		""" quantity < min: quantity less than minimin invalid parameter """
+    def test_quantity_less_than_min(self):
+        """ quantity < min: quantity less than minimin invalid parameter """
 
-		self.assertEqual(get_numbers_ticket(5, 100, 4), [])
+        self.assertEqual(get_numbers_ticket(5, 100, 4), [])
 
-	def test_min_greater_than_max(self):
-		""" min greater than max: invalid parameter """
+    def test_min_greater_than_max(self):
+        """ min greater than max: invalid parameter """
 
-		self.assertEqual(get_numbers_ticket(19, 18, 5), [])
+        self.assertEqual(get_numbers_ticket(19, 18, 5), [])
 
-	def test_zero_quantity(self):
-		""" zero quantity: invalid parameter """
+    def test_zero_quantity(self):
+        """ zero quantity: invalid parameter """
 
-		self.assertEqual(get_numbers_ticket(1, 99, 0), [])
+        self.assertEqual(get_numbers_ticket(1, 99, 0), [])
 
-	def test_min_equals_max_quantity_invalid(self):
-		""" min equals max but quantity not equals min: invalid parameter """
+    def test_min_equals_max_quantity_invalid(self):
+        """ min equals max but quantity not equals min: invalid parameter """
 
-		self.assertEqual(get_numbers_ticket(7, 7, 4), [])
+        self.assertEqual(get_numbers_ticket(7, 7, 4), [])
 
-	def test_max_exactly_1000_quantity_equal_max(self):
-		""" max exactly 1000 and quantity == max: invalid parameter """
+    def test_max_exactly_1000_quantity_equal_max(self):
+        """ max exactly 1000 and quantity == max: invalid parameter """
 
-		result = get_numbers_ticket(1, 1000, 1000)
-		self.assertEqual(len(result), 1000)
+        result = get_numbers_ticket(1, 1000, 1000)
+        self.assertEqual(len(result), 1000)
 
 
 class NormalizePhone(unittest.TestCase):
-	"""Test cases for the normalize_phone function."""
+    """Test cases for the normalize_phone function."""
 
-	def test_local_phone_number(self):
-		self.assertEqual(normalize_phone("067\\t123 4567"), "+380671234567")
+    def test_local_phone_number(self):
+        self.assertEqual(normalize_phone("067\\t123 4567"), "+380671234567")
 
-	def test_number_with_brackets_and_newline(self):
-		self.assertEqual(normalize_phone("(095) 234-5678\n"), "+380952345678")
+    def test_number_with_brackets_and_newline(self):
+        self.assertEqual(normalize_phone("(095) 234-5678\n"), "+380952345678")
+
+    def test_number_with_country_code_and_plus(self):
+        self.assertEqual(normalize_phone("+380 44 123 4567"), "+380441234567")
+
+    def test_number_with_country_code_without_plus(self):
+        self.assertEqual(normalize_phone("380501234567"), "+380501234567")
+
+    def test_number_with_space_and_symbols(self):
+        self.assertEqual(normalize_phone("    +38(050)123-32-34"),
+                         "+380501233234")
+
+    def test_common_local_number(self):
+        self.assertEqual(normalize_phone("     0503451234"), "+380503451234")
+
+    def test_number_with_brackets_and_dashes(self):
+        self.assertEqual(normalize_phone("(050)88-89-900"), "+380508889900")
+
+    def test_number_with_trailing_spaces(self):
+        self.assertEqual(normalize_phone("38050 111 22 11   "),
+                         "+380501112211")
 
 
 class GetUpcomingBirthdays(unittest.TestCase):
-	"""Test cases for the get_upcoming_birthdays function."""
-	pass
+    """Test cases for the get_upcoming_birthdays function."""
+
+    @patch('main.datetime')
+    def test_birthday_today(self, mock_datetime):
+        """Function to test birthday today"""
+
+        fixed_date = datetime(2026, 4, 7)
+        users = [{"name": "Alice", "birthday": "1990.04.07"}]
+        mock_datetime.today.return_value = fixed_date
+        mock_datetime.strptime.side_effect = datetime.strptime
+        mock_datetime.side_effect = lambda *args, **kw: datetime(*args, **kw)
+        result = get_upcoming_birthdays(users)
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["name"], "Alice")
+        self.assertEqual(result[0]["congratulation_date"], "2026-04-07")
 
 
 if __name__ == "__main__":
-	unittest.main(verbosity=2)
+    unittest.main(verbosity=2)
