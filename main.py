@@ -71,7 +71,5 @@ def get_upcoming_birthdays(users: list[dict]) -> list[dict]:
                 {"name": user["name"],
                  "congratulation_date": congratulation_date.strftime(
                      "%Y-%m-%d"), })
-        else:
-            continue
 
     return upcoming_birthdays
