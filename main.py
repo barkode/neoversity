@@ -1,6 +1,7 @@
 import re
 from datetime import datetime, timedelta
 from random import randint
+from data import users
 
 
 def get_days_from_today(date: str) -> int | None:
@@ -73,3 +74,6 @@ def get_upcoming_birthdays(users: list[dict]) -> list[dict]:
                      "%Y-%m-%d"), })
 
     return upcoming_birthdays
+
+upcoming_birthdays = get_upcoming_birthdays(users)
+print("Список привітань на цьому тижні:", upcoming_birthdays)
