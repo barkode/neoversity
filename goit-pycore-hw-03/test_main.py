@@ -170,38 +170,4 @@ class NormalizePhone(unittest.TestCase):
         self.assertEqual(normalize_phone("380501234567"), "+380501234567")
 
     def test_number_with_space_and_symbols(self):
-        self.assertEqual(normalize_phone("    +38(050)123-32-34"),
-                         "+380501233234")
-
-    def test_common_local_number(self):
-        self.assertEqual(normalize_phone("     0503451234"), "+380503451234")
-
-    def test_number_with_brackets_and_dashes(self):
-        self.assertEqual(normalize_phone("(050)88-89-900"), "+380508889900")
-
-    def test_number_with_trailing_spaces(self):
-        self.assertEqual(normalize_phone("38050 111 22 11   "),
-                         "+380501112211")
-
-
-class GetUpcomingBirthdays(unittest.TestCase):
-    """Test cases for the get_upcoming_birthdays function."""
-
-    @patch('main.datetime')
-    def test_birthday_today(self, mock_datetime):
-        """Function to test birthday today"""
-
-        fixed_date = datetime(2026, 4, 7)
-        users = [{"name": "Alice", "birthday": "1990.04.07"}]
-        mock_datetime.today.return_value = fixed_date
-        mock_datetime.strptime.side_effect = datetime.strptime
-        mock_datetime.side_effect = lambda *args, **kw: datetime(*args, **kw)
-        result = get_upcoming_birthdays(users)
-
-        self.assertEqual(len(result), 1)
-        self.assertEqual(result[0]["name"], "Alice")
-        self.assertEqual(result[0]["congratulation_date"], "2026-04-07")
-
-
-if __name__ == "__main__":
-    unittest.main(verbosity=2)
+        self.assertEqual(nor
