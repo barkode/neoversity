@@ -166,6 +166,3 @@ class NormalizePhone(unittest.TestCase):
 
     def test_number_with_country_code_without_plus(self):
         self.assertEqual(normalize_phone("380501234567"), "+380501234567")
-
-    def test_number_with_space_and_symbols(self):
-        self.assertEqual(nor
