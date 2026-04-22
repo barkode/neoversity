@@ -13,7 +13,7 @@ def get_days_from_today(date: str) -> int | None:
             f"Not correct date '{date}'. {str(e).capitalize()}. Please, use date format as 'YYYY-MM-DD'.")
         return None
     delta_time = user_date - datetime.today().date()
-    return int(delta_time.days)
+    return delta_time.days
 
 
 def get_numbers_ticket(min: int, max: int, quantity: int) -> list[int]:
