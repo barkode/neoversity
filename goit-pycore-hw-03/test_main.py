@@ -1,9 +1,7 @@
 import unittest
-from datetime import date, datetime
-from unittest.mock import patch
+from datetime import date
 
-from main import get_days_from_today, get_numbers_ticket, \
-    get_upcoming_birthdays, normalize_phone
+from main import get_days_from_today, get_numbers_ticket, normalize_phone
 
 
 class GetDaysFromToday(unittest.TestCase):
