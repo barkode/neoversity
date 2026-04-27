@@ -51,9 +51,31 @@ def get_cats_info(path) -> list[dict]:
         return []
 
 
-total, average = total_salary("salary.txt")
-print(
-    f"Загальна сума заробітної плати: {total}, Середня заробітна плата: {average}")
+def read_file(path: str) -> list[str]:
+    try:
+        lines = []
+        with open(path, encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                line = tuple(line.split(','))
+                lines.append(line)
+    except FileNotFoundError:
+        print(f'File {path} not found')
+        return []
+    return lines
 
-cats_info = get_cats_info("cats.txt")
-print(cats_info)
+
+# total, average = total_salary("salary.txt")
+# print(
+#     f"Загальна сума заробітної плати: {total}, Середня заробітна плата: {average}")
+#
+# cats_info = get_cats_info("cats.txt")
+# print(cats_info)
+
+b = read_file("cats.txt")
+print(b)
+
+c = read_file("salary.txt")
+print(c)
