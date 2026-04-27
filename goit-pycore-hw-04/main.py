@@ -26,8 +26,34 @@ def total_salary(path: str) -> tuple[int, int]:
 
 
 def get_cats_info(path) -> list[dict]:
-    pass
+    """Function get cats info of given path"""
+    try:
+        cats = []
+        with open(path, encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    id_num, name, age = line.split(',')
+                    cats.append({"id": id_num, "name": name, "age": age})
+                except (ValueError, IndexError):
+                    print(f'Error in line {line}')
+                    continue
+
+        if not cats:
+            return []
+
+        return cats
+
+    except FileNotFoundError:
+        print(f'File {path} not found')
+        return []
 
 
-b = total_salary('salary.txt')
-print(b)
+total, average = total_salary("salary.txt")
+print(
+    f"Загальна сума заробітної плати: {total}, Середня заробітна плата: {average}")
+
+cats_info = get_cats_info("cats.txt")
+print(cats_info)
