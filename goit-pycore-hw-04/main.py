@@ -3,7 +3,7 @@ def total_salary(path: str) -> tuple[int, int]:
     result = []
     salaries = read_file(path)
 
-    if salaries is None or not salaries:
+    if not salaries:
         return 0, 0
 
     for salary in salaries:
@@ -20,7 +20,7 @@ def get_cats_info(path) -> list[dict]:
     result = []
     cats = read_file(path)
 
-    if cats is None or not cats:
+    if not cats:
         return []
 
     for cat in cats:
