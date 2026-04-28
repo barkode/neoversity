@@ -31,6 +31,7 @@ def get_cats_info(path) -> list[dict]:
 
 
 def read_file(path) -> list[str]:
+    """Function read file and check if it exists"""
     try:
         lines = []
         with open(path, encoding='utf-8') as f:
