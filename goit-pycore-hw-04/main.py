@@ -3,7 +3,7 @@ def total_salary(path: str) -> tuple[int, int]:
     result = []
     salaries = read_file(path)
 
-    if not salaries:
+    if salaries is None or not salaries:
         return 0, 0
 
     for salary in salaries:
@@ -20,7 +20,7 @@ def get_cats_info(path) -> list[dict]:
     result = []
     cats = read_file(path)
 
-    if not cats:
+    if cats is None or not cats:
         return []
 
     for cat in cats:
@@ -41,6 +41,7 @@ def read_file(path) -> list[str]:
                 try:
                     line = tuple(line.split(','))
                     lines.append(line)
+
                 except (ValueError, IndexError):
                     print(f'Error in line {line}')
                     continue
@@ -48,7 +49,7 @@ def read_file(path) -> list[str]:
 
     except FileNotFoundError:
         print(f'File {path} not found')
-        return []
+        return None
 
 
 total, average = total_salary("salary.txt")
