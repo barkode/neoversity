@@ -27,31 +27,21 @@ def total_salary(path: str) -> tuple[int, int]:
 
 def get_cats_info(path) -> list[dict]:
     """Function get cats info of given path"""
-    try:
-        cats = []
-        with open(path, encoding='utf-8') as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    id_num, name, age = line.split(',')
-                    cats.append({"id": id_num, "name": name, "age": age})
-                except (ValueError, IndexError):
-                    print(f'Error in line {line}')
-                    continue
+    result = []
+    cats = read_file(path)
+    print(cats)
 
-        if not cats:
-            return []
-
-        return cats
-
-    except FileNotFoundError:
-        print(f'File {path} not found')
+    if not cats:
         return []
 
+    for cat in cats:
+        id_num, name, age = cat
+        result.append({"id": id_num, "name": name, "age": age})
 
-def read_file(path: str) -> list[str]:
+    return result
+
+
+def read_file(path) -> list[str]:
     try:
         lines = []
         with open(path, encoding='utf-8') as f:
@@ -59,23 +49,21 @@ def read_file(path: str) -> list[str]:
                 line = line.strip()
                 if not line:
                     continue
-                line = tuple(line.split(','))
-                lines.append(line)
+                try:
+                    line = tuple(line.split(','))
+                    lines.append(line)
+                except (ValueError, IndexError):
+                    print(f'Error in line {line}')
+                    continue
+        return lines
+
     except FileNotFoundError:
         print(f'File {path} not found')
         return []
-    return lines
-
 
 # total, average = total_salary("salary.txt")
 # print(
 #     f"Загальна сума заробітної плати: {total}, Середня заробітна плата: {average}")
 #
-# cats_info = get_cats_info("cats.txt")
-# print(cats_info)
-
-b = read_file("cats.txt")
-print(b)
-
-c = read_file("salary.txt")
-print(c)
+cats_info = get_cats_info("cats.txt")
+print(cats_info)
