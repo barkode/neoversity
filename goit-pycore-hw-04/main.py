@@ -30,32 +30,34 @@ def get_cats_info(path) -> list[dict]:
     return result
 
 
-def read_file(path) -> list[str]:
+def read_file(path) -> list | None:
     """Function read file and check if it exists"""
     try:
         lines = []
-        with open(path, encoding='utf-8') as f:
+        with open(path, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if not line:
                     continue
                 try:
-                    line = tuple(line.split(','))
+                    line = tuple(line.split(","))
                     lines.append(line)
 
                 except (ValueError, IndexError):
-                    print(f'Error in line {line}')
+                    print(f"Error in line {line}")
                     continue
         return lines
 
     except FileNotFoundError:
-        print(f'File {path} not found')
+        print(f"File {path} not found")
         return None
 
 
 total, average = total_salary("salary.txt")
 print(
-    f"Загальна сума заробітної плати: {total}, Середня заробітна плата: {average}")
+    f"Загальна сума заробітної плати: {total}, \
+        Середня заробітна плата: {average}"
+)
 
 cats_info = get_cats_info("cats.txt")
 print(cats_info)
