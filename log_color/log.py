@@ -1,4 +1,4 @@
-from colorama import Fore
+from log_color import Fore
 
 
 def log_info(message) -> None:
