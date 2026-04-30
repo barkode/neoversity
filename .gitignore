@@ -1,6 +1,7 @@
 .idea/
 .venv/
 .vscode/
+.zed/
 __pycache__/
 *.pyc
 *.pyo
