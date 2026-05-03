@@ -2,12 +2,8 @@ import sys
 import os
 from pathlib import Path
 from colorama import Fore, Style, init
-from helpers import COLOUR_SCHEMA
-
-
-def clear_screen():
-    """function that clears screen"""
-    os.system("cls" if os.name == "nt" else "clear")
+from helpers import clear_screen
+from constants import COLOUR_SCHEMA
 
 
 def print_directory_tree(path, indent=""):
