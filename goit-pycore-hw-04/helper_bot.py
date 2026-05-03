@@ -1,17 +1,9 @@
-import sys
 from constants import EXIT_PHRASES
 
 
 def parse_input(user_input):
-    parts = user_input.strip().split()
-
-    if not parts:
-        return "", []
-
-    command = parts[0].lower()
-    args = parts[1:]
-
-    return command, args
+    parts = user_input.strip().lower().split()
+    return parts[0], parts[1:] if parts else ("", [])
 
 
 def add_contact(args, contacts):
@@ -52,17 +44,14 @@ def show_all(contacts):
     if not contacts:
         return "No contacts found."
 
-    result = []
-
-    for name, phone in contacts.items():
-        result.append(f"{name}: {phone}")
+    result = [f"{name}: {phone}" for name, phone in contacts.items()]
 
     return "\n".join(result)
 
 
-def print_help():
+def show_help():
     """function that prints help"""
-    help_text = """Available commands:
+    return """Available commands:
 - hello: Greet the bot.
 - add [name] [phone]: Add a new contact.
 - change [name] [new_phone]: Change the phone number of an existing contact.
@@ -70,7 +59,6 @@ def print_help():
 - all: Show all contacts.
 - help: Show this help message.
 - exit, quit, bye: Exit the bot."""
-    print(help_text)
 
 
 def main():
@@ -80,8 +68,16 @@ def main():
 
     while True:
 
-        user_input = input("Enter a command or <help> to see all commands\n: ")
-        command, args = parse_input(user_input)
+        try:
+            user_input = input(
+                "Enter a command or <help> to see all commands\n: ")
+            command, args = parse_input(user_input)
+        except (EOFError, KeyboardInterrupt):
+            print("\nGoodbye!")
+            break
+
+        if not command:
+            continue
 
         match command:
             case cmd if cmd in EXIT_PHRASES:
@@ -91,15 +87,15 @@ def main():
             case "hello":
                 print("Hello there! What we're looking for?")
             case "add":
-                add_contact(args, contacts)
+                print(add_contact(args, contacts))
             case "change":
-                change_contact(args, contacts)
+                print(change_contact(args, contacts))
             case "phone":
-                show_phone(args, contacts)
+                print(show_phone(args, contacts))
             case "all":
-                show_all(contacts)
+                print(show_all(contacts))
             case "help":
-                print_help()
+                print(show_help())
             case _:
                 print("Invalid command.")
 
