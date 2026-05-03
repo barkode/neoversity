@@ -1,5 +1,5 @@
 import os
-
+from pathlib import Path
 
 def read_file(path: str) -> list:
     """Function read file and check if it exists"""
@@ -31,3 +31,8 @@ def clear_screen():
 def system_check():
     """function that checks whether system is available"""
     return "posix" if os.name == "posix" else "nt"
+
+def is_directory_exists(path: str) -> bool:
+    """function that checks whether directory exists"""
+
+    return Path(path).exists()
