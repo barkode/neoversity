@@ -11,7 +11,10 @@ def get_cats_info(path: str = DEFAULT_PATH) -> list[dict]:
         return []
 
     for cat in cats:
-        id_num, name, age, *rest = cat
+        if len(cat) < 3:
+            continue
+
+        id_num, name, age = cat[:3]
         result.append({"id": id_num, "name": name, "age": age})
 
     return result
