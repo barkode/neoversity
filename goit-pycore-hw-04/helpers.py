@@ -1,4 +1,5 @@
-from colorama import Fore, Style
+import os
+
 
 def read_file(path: str) -> list:
     """Function read file and check if it exists"""
@@ -23,29 +24,6 @@ def read_file(path: str) -> list:
         return []
 
 
-EXIT_COMMANDS = ['exit', 'close', 'good bye', 'bye']
-
-HELP_COMMANDS_DICTIONARY = {
-    'exit': 'Exit',
-    'close': 'Close',
-    }
-
-DEFAULT_PATH = './'
-
-COLOUR_SCHEMA = {
-    ".py": Fore.CYAN + Style.BRIGHT,
-    ".exe": Fore.RED + Style.BRIGHT,
-    ".txt": Fore.WHITE + Style.BRIGHT,
-    ".md": Fore.GREEN + Style.BRIGHT,
-    ".pdf": Fore.YELLOW + Style.BRIGHT,
-    ".jpg": Fore.MAGENTA + Style.BRIGHT,
-    ".png": Fore.MAGENTA + Style.BRIGHT,
-    ".zip": Fore.RED + Style.BRIGHT,
-    "directory": Fore.BLUE + Style.BRIGHT,
-    "default": Fore.WHITE + Style.DIM,
-    "error": Fore.RED,
-    "warning": Fore.YELLOW,
-    "reset": Fore.RESET,
-    "icon_directory": "📁 ",
-    "icon_file": "📄 "
-    }
+def clear_screen():
+    """function that clears screen"""
+    os.system("cls" if os.name == "nt" else "clear")
