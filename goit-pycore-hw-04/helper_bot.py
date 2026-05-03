@@ -85,7 +85,7 @@ def main():
                 break
 
             case "hello":
-                print("Hello there! What we're looking for?")
+                print("How can I help you?")
             case "add":
                 print(add_contact(args, contacts))
             case "change":
