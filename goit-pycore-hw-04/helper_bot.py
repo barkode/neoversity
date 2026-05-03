@@ -11,6 +11,7 @@ def add_contact(args: list, contacts: dict) -> str:
         return "Usage: add [name] [phone]"
 
     name, phone = args
+    name = name.strip().capitalize()
     contacts[name] = phone
     return "Contact added."
 
