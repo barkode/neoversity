@@ -25,6 +25,6 @@ HELP_COMMANDS_DICTIONARY = {
     'close': 'Close',
     }
 
-DEFAULT_PATH = './'
+DEFAULT_PATH = '.'
 DEFAULT_SALARIES_PATH = "salaries.txt"
 DEFAULT_CATS_INFO_PATH = "cats_info.txt"
