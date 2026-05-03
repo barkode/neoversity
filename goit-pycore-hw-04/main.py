@@ -29,7 +29,8 @@ def main():
                 break
             case '1':
                 clear_screen()
-                calculate_total_salary(path=user_input)
+                total, avg = calculate_total_salary()
+                print(f"Total salary: {total}, Average salary: {avg}")
             case '2':
                 clear_screen()
                 print("CASE 2")
