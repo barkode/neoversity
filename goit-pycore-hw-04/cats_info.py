@@ -1,6 +1,6 @@
 from helpers import read_file
+from constants import DEFAULT_CATS_INFO_PATH as DEFAULT_PATH
 
-DEFAULT_PATH = "cats_info.txt"
 
 def get_cats_info(path: str = DEFAULT_PATH) -> list[dict]:
     """Function get cats info of given path"""
@@ -15,3 +15,6 @@ def get_cats_info(path: str = DEFAULT_PATH) -> list[dict]:
         result.append({"id": id_num, "name": name, "age": age})
 
     return result
+
+if __name__ == "__main__":
+    print("I'm not working in standalone mode. Please run main.py to use this function.")
