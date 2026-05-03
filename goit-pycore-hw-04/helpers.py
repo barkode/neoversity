@@ -1,8 +1,9 @@
 import os
 from pathlib import Path
 
+
 def read_file(path: str) -> list:
-    """Function read file and check if it exists"""
+    """Read a text file and return normalized records."""
     try:
         lines = []
         with open(path, encoding="utf-8") as f:
@@ -20,14 +21,15 @@ def read_file(path: str) -> list:
 
 
 def clear_screen():
-    """function that clears screen"""
+    """Clear the terminal screen."""
     os.system("cls" if os.name == "nt" else "clear")
 
+
 def system_check():
-    """function that checks whether system is available"""
+    """Return the current operating system family."""
     return "posix" if os.name == "posix" else "nt"
 
-def is_directory_exists(path: str) -> bool:
-    """function that checks whether directory exists"""
 
-    return Path(path).exists()
+def is_directory_exists(path: str) -> bool:
+    """Check whether the provided path exists and is a directory."""
+    return Path(path).exists() and Path(path).is_dir()
