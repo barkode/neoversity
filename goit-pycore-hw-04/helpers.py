@@ -27,3 +27,7 @@ def read_file(path: str) -> list:
 def clear_screen():
     """function that clears screen"""
     os.system("cls" if os.name == "nt" else "clear")
+
+def system_check():
+    """function that checks whether system is available"""
+    return "posix" if os.name == "posix" else "nt"
