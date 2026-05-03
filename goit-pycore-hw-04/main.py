@@ -1,66 +1,22 @@
-def total_salary(path: str) -> tuple[int, int]:
-    """Function calculate total salary of given path"""
-    result = []
-    salaries = read_file(path)
+import sys
+import calculate_total_salary
+import cats_info
 
-    if not salaries:
-        return 0, 0
-
-    for salary in salaries:
-        _, person_salary = salary
-        result.append(float(person_salary))
-
-    total = sum(result)
-    average = total / len(salaries)
-    return int(total), int(average)
+EXIT_PHRASES = ['quit', 'exit', 'q', 'logoff']
 
 
-def get_cats_info(path) -> list[dict]:
-    """Function get cats info of given path"""
-    result = []
-    cats = read_file(path)
+def main():
+    while True:
+        print()
+        user_input = input("Введіть команду (або 'quit' для виходу): ").strip().lower()
+        if user_input in EXIT_PHRASES:
+            print("Вихід з програми. До побачення!")
+            break
+        else:
+            print(f"Ви ввели: {user_input}")
+    sys.exit(0)
 
-    if not cats:
-        return []
-
-    for cat in cats:
-        id_num, name, age = cat
-        result.append({"id": id_num, "name": name, "age": age})
-
-    return result
-
-
-def read_file(path) -> list | None:
-    """Function read file and check if it exists"""
-    try:
-        lines = []
-        with open(path, encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    line = tuple(line.split(","))
-                    lines.append(line)
-
-                except (ValueError, IndexError):
-                    print(f"Error in line {line}")
-                    continue
-        return lines
-
-    except FileNotFoundError:
-        print(f"File {path} not found")
-        return None
-
-
-total, average = total_salary("salary.txt")
-print(
-    f"Загальна сума заробітної плати: {total}, \
-        Середня заробітна плата: {average}"
-)
-
-cats_info = get_cats_info("cats.txt")
-print(cats_info)
 
 if __name__ == "__main__":
-    pass
+    main()
+    sys.exit(0)
