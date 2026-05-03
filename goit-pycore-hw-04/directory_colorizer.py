@@ -6,7 +6,13 @@ from constants import COLOUR_SCHEMA, DEFAULT_PATH
 
 
 def print_directory_tree(path, indent=""):
-    for item in path.iterdir():
+    try:
+        items = path.iterdir()
+    except PermissionError:
+        print(indent + COLOUR_SCHEMA.get("error", "") + "[Permission denied]")
+        return
+
+    for item in items:
         if item.is_dir():
             colour = COLOUR_SCHEMA.get("directory", "")
             icon = COLOUR_SCHEMA.get("icon_directory", "")
