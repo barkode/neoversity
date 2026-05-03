@@ -10,13 +10,8 @@ def read_file(path: str) -> list:
                 line = line.strip()
                 if not line:
                     continue
-                try:
-                    line = tuple(line.split(","))
-                    lines.append(line)
-
-                except (ValueError, IndexError):
-                    print(f"Error in line {line}")
-                    continue
+                line = tuple(line.split(","))
+                lines.append(line)
         return lines
 
     except FileNotFoundError:
