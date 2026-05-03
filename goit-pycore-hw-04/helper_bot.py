@@ -1,3 +1,7 @@
+import sys
+from constants import EXIT_PHRASES
+
+
 def parse_input(user_input):
     parts = user_input.strip().split()
 
@@ -56,36 +60,48 @@ def show_all(contacts):
     return "\n".join(result)
 
 
+def print_help():
+    """function that prints help"""
+    help_text = """Available commands:
+- hello: Greet the bot.
+- add [name] [phone]: Add a new contact.
+- change [name] [new_phone]: Change the phone number of an existing contact.
+- phone [name]: Show the phone number of a contact.
+- all: Show all contacts.
+- help: Show this help message.
+- exit, quit, bye: Exit the bot."""
+    print(help_text)
+
+
 def main():
     contacts = {}
 
     print("Welcome to the assistant bot!")
 
     while True:
-        user_input = input("Enter a command: ")
+
+        user_input = input("Enter a command or <help> to see all commands\n: ")
         command, args = parse_input(user_input)
 
-        if command in ["close", "exit"]:
-            print("Good bye!")
-            break
+        match command:
+            case cmd if cmd in EXIT_PHRASES:
+                print("Good bye!")
+                break
 
-        elif command == "hello":
-            print("How can I help you?")
-
-        elif command == "add":
-            print(add_contact(args, contacts))
-
-        elif command == "change":
-            print(change_contact(args, contacts))
-
-        elif command == "phone":
-            print(show_phone(args, contacts))
-
-        elif command == "all":
-            print(show_all(contacts))
-
-        else:
-            print("Invalid command.")
+            case "hello":
+                print("Hello there! What we're looking for?")
+            case "add":
+                add_contact(args, contacts)
+            case "change":
+                change_contact(args, contacts)
+            case "phone":
+                show_phone(args, contacts)
+            case "all":
+                show_all(contacts)
+            case "help":
+                print_help()
+            case _:
+                print("Invalid command.")
 
 
 if __name__ == "__main__":
