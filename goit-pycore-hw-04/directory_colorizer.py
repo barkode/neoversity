@@ -20,11 +20,6 @@ def print_directory_tree(path, indent=""):
             print(indent + colour + icon_file + item.name)
 
 
-def system_check():
-    """function that checks whether system is available"""
-    return "posix" if os.name == "posix" else "nt"
-
-
 def main():
     init(autoreset=True)
 
