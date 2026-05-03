@@ -1,12 +1,12 @@
 from constants import EXIT_PHRASES
 
 
-def parse_input(user_input):
+def parse_input(user_input: str) -> tuple:
     parts = user_input.strip().lower().split()
     return parts[0], parts[1:] if parts else ("", [])
 
 
-def add_contact(args, contacts):
+def add_contact(args: list, contacts: dict) -> str:
     if len(args) != 2:
         return "Usage: add [name] [phone]"
 
@@ -15,7 +15,7 @@ def add_contact(args, contacts):
     return "Contact added."
 
 
-def change_contact(args, contacts):
+def change_contact(args: list, contacts: dict) -> str:
     if len(args) != 2:
         return "Usage: change [name] [new_phone]"
 
@@ -28,7 +28,7 @@ def change_contact(args, contacts):
     return "Contact updated."
 
 
-def show_phone(args, contacts):
+def show_phone(args: list, contacts: dict) -> str:
     if len(args) != 1:
         return "Usage: phone [name]"
 
@@ -40,11 +40,11 @@ def show_phone(args, contacts):
     return contacts[name]
 
 
-def show_all(contacts):
+def show_all(contacts: dict) -> str:
     if not contacts:
         return "No contacts found."
 
-    result = [f"{name}: {phone}" for name, phone in contacts.items()]
+    result = [f"{name}: {phone}" for name, phone in sorted(contacts.items())]
 
     return "\n".join(result)
 
@@ -61,22 +61,24 @@ def show_help():
 - exit, quit, bye: Exit the bot."""
 
 
-def main():
-    contacts = {}
+def main() -> None:
+    contacts: dict = {}
 
     print("Welcome to the assistant bot!")
+    print("Type 'help' to see all available commands.")
 
     while True:
 
         try:
             user_input = input(
-                "Enter a command or <help> to see all commands\n: ")
+                "Enter a command\n: ")
             command, args = parse_input(user_input)
         except (EOFError, KeyboardInterrupt):
             print("\nGoodbye!")
             break
 
         if not command:
+            print("Please enter a command.")
             continue
 
         match command:
