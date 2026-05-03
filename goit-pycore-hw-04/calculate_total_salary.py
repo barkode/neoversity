@@ -11,7 +11,7 @@ def calculate_total_salary(path: str = DEFAULT_PATH) -> tuple[int, int]:
         return 0, 0
 
     for salary in salaries:
-        _, person_salary, *rest = salary
+        _, person_salary = salary[:2]
         result.append(float(person_salary))
 
     total = sum(result)
