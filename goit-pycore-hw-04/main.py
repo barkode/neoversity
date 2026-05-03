@@ -28,8 +28,7 @@ def main():
                 break
             case '1':
                 clear_screen()
-                print("CASE 1")
-                break
+                calculate_total_salary(path=user_input)
             case '2':
                 clear_screen()
                 print("CASE 2")
