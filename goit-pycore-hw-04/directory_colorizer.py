@@ -26,21 +26,29 @@ def main():
     clear_screen()
 
     if len(sys.argv) != 2:
-        print(f"Помилка: потрібно передати шлях до директорії.")
-        print(f"Приклад: python3 {sys.argv[0]} <шлях до директорії>")
+        err = COLOUR_SCHEMA.get("error")
+        warn = COLOUR_SCHEMA.get("warning")
+        reset = COLOUR_SCHEMA.get("reset")
+        print(f"{err}ERROR:{reset} enter the path to the directory..")
+        print(
+            f"{warn}Example:{reset} python3 {sys.argv[0]} <path to the directory>")
         return
 
     directory_path = Path(sys.argv[1])
 
     if not directory_path.exists():
-        print("Помилка: такого шляху не існує.")
+        err = COLOUR_SCHEMA.get("error")
+        reset = COLOUR_SCHEMA.get("reset")
+        print(f"{err}ERROR:{reset} the path doesn't exist")
         return
 
     if not directory_path.is_dir():
-        print("Помилка: вказаний шлях не є директорією.")
+        err = COLOUR_SCHEMA.get("error")
+        reset = COLOUR_SCHEMA.get("reset")
+        print(f"{err}ERROR:{reset} The path is not a directory.")
         return
 
-    print(Fore.YELLOW + f"Структура директорії: {directory_path}")
+    print(Fore.YELLOW + f"Directory structure: {directory_path}")
     print_directory_tree(directory_path)
     print(Style.RESET_ALL)
 
