@@ -1,6 +1,7 @@
 import sys
 from constants import EXIT_PHRASES
 from helpers import clear_screen
+from calculate_total_salary import calculate_total_salary
 
 
 
@@ -40,7 +41,7 @@ def main():
                 print("CASE 4")
             case _:
                 clear_screen()
-                print(f"You enter: {user_input}")
+                print(f"You enter: {user_input}. Use help for more info.")
     sys.exit()
 
 
