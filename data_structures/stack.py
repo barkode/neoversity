@@ -1,6 +1,6 @@
 from typing import Any
 
-
+# LIFO — Last In, First Out
 # push
 # pop
 # peek
