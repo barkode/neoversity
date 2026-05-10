@@ -33,3 +33,8 @@ def system_check():
 def is_directory_exists(path: str) -> bool:
     """Check whether the provided path exists and is a directory."""
     return Path(path).exists() and Path(path).is_dir()
+
+
+def is_file_exists(path: str) -> bool:
+    """Check whether the provided path exists and is a file."""
+    return Path(path).exists() and Path(path).is_file()
