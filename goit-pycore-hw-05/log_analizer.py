@@ -2,7 +2,8 @@ import sys
 
 from pathlib import Path
 
-file_path = "log.log"
+default_file_path = "log.log"
+
 
 def parse_log_line(line: str) -> dict:
     """Function parse log line and return dict with data"""
@@ -19,7 +20,6 @@ def parse_log_line(line: str) -> dict:
 
 def load_logs(file_path: str) -> list:
     """Function load logs from file"""
-    file_path = Path(file_path)
     try:
         lines = []
         with open(file_path, encoding="utf-8") as f:
@@ -59,7 +59,7 @@ def count_logs_by_level(logs: list) -> dict:
 
 def display_log_counts(counts: dict):
     """Format and display log counts"""
-    print(f"\n{'Рівень логування':<17}| {'Кількість'}")
+    print(f"\n{'Logging level':<17}| {'Quantity'}")
     print(f"{'-' * 17}|{'-' * 10}")
     for level, count in counts.items():
         print(f"{level:<17}| {count}")
@@ -69,10 +69,10 @@ def main():
     """ Main function"""
     if len(sys.argv) < 2:
         print(
-            "Using: python main.py <шлях_до_файлу> [рівень_логування]")
+            "Using: python main.py <path_to_file> [logging_level]")
         sys.exit(1)
 
-    file_path = sys.argv[1]
+    file_path = Path(sys.argv[1])
     filter_level = sys.argv[2].upper() if len(sys.argv) > 2 else None
 
     logs = load_logs(file_path)
@@ -81,12 +81,12 @@ def main():
 
     if filter_level:
         filtered = filter_logs_by_level(logs, filter_level)
-        print(f"\nДеталі логів для рівня '{filter_level}':")
+        print(f"\nLog details for the level '{filter_level}':")
         if filtered:
             for log in filtered:
                 print(f"{log['date']} {log['time']} - {log['message']}")
         else:
-            print(f"Записів із рівнем '{filter_level}' не знайдено.")
+            print(f"Entries with level '{filter_level}' not found.")
 
 
 if __name__ == "__main__":
