@@ -1,9 +1,8 @@
-import os
 import sys
 
 from pathlib import Path
 
-
+file_path = "log.log"
 
 def parse_log_line(line: str) -> dict:
     """Function parse log line and return dict with data"""
@@ -20,12 +19,14 @@ def parse_log_line(line: str) -> dict:
 
 def load_logs(file_path: str) -> list:
     """Function load logs from file"""
+    file_path = Path(file_path)
     try:
         lines = []
         with open(file_path, encoding="utf-8") as f:
             lines = [line for line in f if line.strip()]
     except FileNotFoundError:
         print(f"File not found: {file_path}")
+        sys.exit(1)
     except IOError as err:
         print(f"File error: {err}")
         sys.exit(1)
