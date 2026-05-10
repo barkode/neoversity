@@ -1,4 +1,20 @@
-from constants import EXIT_PHRASES
+from typing import Callable
+
+from dictionaries import EXIT_PHRASES
+
+
+def input_error(func: Callable) -> Callable:
+    def wrapper(*args: list, **kwargs: dict) -> Callable:
+        try:
+            return func(*args, **kwargs)
+        except ValueError:
+            return "Give me name or phone please."
+        except KeyError:
+            return "Contact not found."
+        except IndexError:
+            return "Enter the argument for the command."
+
+    return wrapper
 
 
 def parse_input(user_input: str) -> tuple:
@@ -6,6 +22,7 @@ def parse_input(user_input: str) -> tuple:
     return parts[0], parts[1:] if parts else ("", [])
 
 
+@input_error
 def add_contact(args: list, contacts: dict) -> str:
     if len(args) != 2:
         return "Usage: add [name] [phone]"
@@ -16,6 +33,7 @@ def add_contact(args: list, contacts: dict) -> str:
     return "Contact added."
 
 
+@input_error
 def change_contact(args: list, contacts: dict) -> str:
     if len(args) != 2:
         return "Usage: change [name] [new_phone]"
@@ -29,6 +47,7 @@ def change_contact(args: list, contacts: dict) -> str:
     return "Contact updated."
 
 
+@input_error
 def show_phone(args: list, contacts: dict) -> str:
     if len(args) != 1:
         return "Usage: phone [name]"
@@ -41,6 +60,7 @@ def show_phone(args: list, contacts: dict) -> str:
     return contacts[name]
 
 
+@input_error
 def show_all(contacts: dict) -> str:
     if not contacts:
         return "No contacts found."
