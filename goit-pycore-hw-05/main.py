@@ -1,15 +1,11 @@
 import sys
-from constants import (
-    DEFAULT_CATS_INFO_PATH,
-    DEFAULT_PATH,
-    DEFAULT_SALARIES_PATH,
-    EXIT_PHRASES,
-    )
+
 from helpers import clear_screen
 from calculate_total_salary import calculate_total_salary
 from cats_info import get_cats_info
 from helper_bot import main as run_helper_bot
 from directory_colorizer import main as run_directory_colorizer
+from dictionaries import EXIT_PHRASES
 
 
 def print_menu() -> None:
