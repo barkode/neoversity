@@ -1,6 +1,9 @@
 from models import AddressBook
 from commands import add_contact, change_contact, show_phone, add_birthday, \
     show_birthday, birthdays
+import pickle
+
+FILE_NAME = "addressbook.pkl"
 
 
 def parse_input(user_input: str):
@@ -10,8 +13,21 @@ def parse_input(user_input: str):
     return command, *args
 
 
+def save_data(book, filename=FILE_NAME):
+    with open(filename, "wb") as f:
+        pickle.dump(book, f)
+
+
+def load_data(filename=FILE_NAME):
+    try:
+        with open(filename, "rb") as f:
+            return pickle.load(f)
+    except FileNotFoundError:
+        return AddressBook()
+
+
 def main():
-    book = AddressBook()
+    book = load_data()
     print("Welcome to the assistant bot!")
 
     while True:
@@ -19,6 +35,7 @@ def main():
         command, *args = parse_input(user_input)
 
         if command in ["close", "exit"]:
+            save_data(book)
             print("Good bye!")
             break
 
