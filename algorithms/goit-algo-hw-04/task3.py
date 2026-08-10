@@ -21,6 +21,7 @@ def insertion_sort(data: list[int]) -> list[int]:
     return result
 
 
+
 def merge(left: list[int], right: list[int]) -> list[int]:
     """Об'єднує два відсортовані списки."""
     merged = []
