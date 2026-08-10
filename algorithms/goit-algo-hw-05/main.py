@@ -154,11 +154,11 @@ def print_results(article_name: str, results: dict) -> None:
 
 
 def main() -> None:
-    text_1 = read_text("test1.txt")
-    text_2 = read_text("test2.txt")
+    text_1 = read_text("text1.txt")
+    text_2 = read_text("text2.txt")
 
     # Підрядки, які наявні у відповідних статтях.
-    existing_pattern_1 = "алгоритми"
+    existing_pattern_1 = "алгоритм сортування"
     existing_pattern_2 = "рекомендаційної системи"
 
     # Підрядки, яких гарантовано немає у статтях.
@@ -172,10 +172,10 @@ def main() -> None:
         }
 
     # Перевірка коректності обраних підрядків.
-    assert existing_pattern_1 in text_1, "Підрядок для test1.txt не знайдено."
-    assert existing_pattern_2 in text_2, "Підрядок для test2.txt не знайдено."
-    assert missing_pattern_1 not in text_1, "Вигаданий підрядок є у test1.txt."
-    assert missing_pattern_2 not in text_2, "Вигаданий підрядок є у test2.txt."
+    assert existing_pattern_1 in text_1, "Підрядок для text1.txt не знайдено."
+    assert existing_pattern_2 in text_2, "Підрядок для text2.txt не знайдено."
+    assert missing_pattern_1 not in text_1, "Вигаданий підрядок є у text1.txt."
+    assert missing_pattern_2 not in text_2, "Вигаданий підрядок є у text2.txt."
 
     results_1 = {
         name: {
