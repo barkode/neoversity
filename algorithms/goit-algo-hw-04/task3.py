@@ -195,8 +195,8 @@ def main() -> None:
     algorithms = [merge_sort, insertion_sort, timsort_sorted, timsort_sort, bucket_sort, radix_sort]
 
     print(
-        f"{'Data type':<20}"
-        f"{'Size':<16}"
+        f"{'Data type':<16}"
+        f"{'Size':<10}"
         f"{'Merge sort, c':<18}"
         f"{'Insertion sort, c':<18}"
         f"{'Timsort sorted, c':<18}"
@@ -204,7 +204,7 @@ def main() -> None:
         f"{'Bucket sort, c':<18}"
         f"{'Radix sort, c':<18}"
         )
-    print("-" * 86)
+    print("-" * 120)
 
     for size in sizes:
         datasets = {
