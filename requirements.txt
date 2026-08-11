@@ -21,6 +21,8 @@ mdurl==0.1.2
 msgpack==1.2.1
 multidict==6.7.1
 numpy==2.5.2
+numpy-typing-compat==20260602.2.5
+optype==0.18.0
 packaging==26.3
 pillow==12.3.0
 platformdirs==4.11.2
@@ -30,6 +32,8 @@ pyparsing==3.3.2
 pyrefly==1.2.0
 python-dateutil==2.9.0.post0
 rich==15.0.0
+scipy==1.18.0
+scipy-stubs==1.18.0.1
 six==1.17.0
 textual==8.2.8
 textual-dev==1.8.0
