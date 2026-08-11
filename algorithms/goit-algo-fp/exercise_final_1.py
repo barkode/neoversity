@@ -62,18 +62,46 @@ class LinkedList:
         print('None')
 
     def reverse(self):
-        #TODO Реалізувати метод реверсування однозв'язного списку, змінюючи посилання між вузлами
+        # Реверсування однозв'язного списку шляхом зміни посилань між вузлами
         # 1 -> 2 -> 3 => 3 -> 2 -> 1
-        pass
+        prev = None
+        cur = self.head
+        while cur:
+            next_node = cur.next  # зберігаємо наступний вузол
+            cur.next = prev       # змінюємо посилання на попередній
+            prev = cur            # рухаємо prev вперед
+            cur = next_node       # рухаємо cur вперед
+        self.head = prev          # новий head — колишній останній вузол
 
     def merge_sort(self, head):
-        #TODO Реалізуавти метод сортування для однозв'язного списку (можна і не злиттям)
+        # Сортування злиттям для однозв'язного списку
         # 2 -> 1 -> 3 => 1 -> 2 -> 3
-        pass
+        # Базовий випадок: порожній список або один елемент
+        if head is None or head.next is None:
+            return head
+
+        # Знаходимо середину та розбиваємо список на дві половини
+        middle = self.get_middle(head)
+        next_of_middle = middle.next
+        middle.next = None  # розриваємо список
+
+        # Рекурсивно сортуємо обидві половини
+        left = self.merge_sort(head)
+        right = self.merge_sort(next_of_middle)
+
+        # Зливаємо відсортовані половини
+        return self.sorted_merge(left, right)
 
     def get_middle(self, head):
-        #TODO Отримати елемент в середині однозв'язного списку. Не обов'язково
-        pass
+        # Знаходимо середній вузол за допомогою двох вказівників (slow/fast)
+        if head is None:
+            return head
+        slow = head
+        fast = head
+        while fast.next and fast.next.next:
+            slow = slow.next
+            fast = fast.next.next
+        return slow
 
     def sorted_merge(self, a, b):
         result = None
@@ -93,11 +121,12 @@ class LinkedList:
         return result
 
     def merge_sorted_lists(self, list1, list2):
-        #TODO Реалізувати метод, що об'єднує два відсортовані однозв'язні списки в один відсортований список
+        # Об'єднує два відсортовані однозв'язні списки в один відсортований список
         # 1 -> 2
         # 1 -> 3
         # Output: 1 -> 1 -> 2 -> 3
-        pass
+        merged_head = self.sorted_merge(list1.head, list2.head)
+        self.head = merged_head
 
 if __name__ == '__main__':
 
