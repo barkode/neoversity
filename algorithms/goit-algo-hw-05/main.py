@@ -149,7 +149,7 @@ def print_results(article_name: str, results: dict) -> None:
     fastest_existing = min(results, key=lambda name: results[name]["existing"])
     fastest_missing = min(results, key=lambda name: results[name]["missing"])
 
-    print("\nНайшвидший для наявного підрядка:", fastest_existing)
+    print("Найшвидший для наявного підрядка:", fastest_existing)
     print("Найшвидший для вигаданого підрядка:", fastest_missing)
 
 
@@ -169,6 +169,11 @@ def main() -> None:
         "Боєра—Мура": boyer_moore_search,
         "Кнута—Морріса—Пратта": kmp_search,
         "Рабіна—Карпа": rabin_karp_search,
+        }
+
+    articles = {
+        "article1": "Стаття 1: Використання алгоритмів у бібліотеках мов програмування",
+        "article2": "Стаття 2: Методи та структури даних для рекомендаційної системи",
         }
 
     # Перевірка коректності обраних підрядків.
@@ -194,10 +199,10 @@ def main() -> None:
         }
 
     print_results(
-        "Стаття 1: Використання алгоритмів у бібліотеках мов програмування",
+        articles["article1"],
         results_1)
     print_results(
-        "Стаття 2: Методи та структури даних для рекомендаційної системи",
+        articles["article2"],
         results_2)
 
     combined_results = {
