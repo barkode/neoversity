@@ -92,5 +92,22 @@ def main() -> None:
             break
 
 
+class ACT:
+    pass
+
+
+class BinOp(ACT):
+    def __init__(self, left, op, right) -> None:
+        self.left = left
+        self.op = op
+        self.right = right
+
+
+class Num(ACT):
+    def __init__(self, token) -> None:
+        self.token = token
+        self.value = token.value
+
+
 if __name__ == '__main__':
     main()
