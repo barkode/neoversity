@@ -1,3 +1,4 @@
+# Лексичний аналізатор (токенізатор) для простого інтерпретатора арифметичних виразів.
 class TokenType:
     INTEGER = "INTEGER"
     PLUS = "PLUS"
@@ -72,41 +73,96 @@ class Lexer:
         return Token(TokenType.EOF, None)
 
 
-def main() -> None:
-    while True:
-        try:
-            text = input('Введіть вираз (або "exit" для виходу): ')
-            if text.lower() == 'exit':
-                print("Вихід із програми.")
-                break
-            if not text:
-                continue
-            lexer = Lexer(text)
-            token = lexer.get_next_token()
-            while token.type != TokenType.EOF:
-                print(token)
-                token = lexer.get_next_token()
-        except LexicalError as e:
-            print(e)
-        except EOFError:
-            break
-
-
-class ACT:
+# Статичний аналізатор (парсер) для простого інтерпретатора арифметичних виразів.
+class AST:
     pass
 
 
-class BinOp(ACT):
+class BinOp(AST):
     def __init__(self, left, op, right) -> None:
         self.left = left
         self.op = op
         self.right = right
 
 
-class Num(ACT):
+class Num(AST):
     def __init__(self, token) -> None:
         self.token = token
         self.value = token.value
+
+
+class ParsingError(Exception):
+    pass
+
+
+class Parser:
+    def __init__(self, lexer):
+        self.lexer = lexer
+        self.current_token = self.lexer.get_next_token()
+
+    def error(self) -> None:
+        raise ParsingError('Помилка синтаксичного аналізу')
+
+    def eat(self, token_type) -> None:
+        """
+        Порівнюємо поточний токен з очікуваним токеном і, якщо вони збігаються,
+        'поглинаємо' його й переходимо до наступного токена.
+        """
+        if self.current_token.type == token_type:
+            self.current_token = self.lexer.get_next_token()
+        else:
+            self.error()
+
+    def term(self):
+        """ Парсер для 'term' правил граматики. У нашому випадку - це цілі числа."""
+        token = self.current_token
+        self.eat(TokenType.INTEGER)
+        return Num(token)
+
+    def expr(self):
+        """ Парсер для арифметичних виразів. """
+        node = self.term()
+
+        while self.current_token.type in (TokenType.PLUS, TokenType.MINUS):
+            token = self.current_token
+            if token.type == TokenType.PLUS:
+                self.eat(TokenType.PLUS)
+            elif token.type == TokenType.MINUS:
+                self.eat(TokenType.MINUS)
+
+            node = BinOp(left=node, op=token, right=self.term())
+
+        return node
+
+
+def print_ast(node, level=0):
+    indent = ' ' * level
+    if isinstance(node, Num):
+        print(f"{indent}Num({node.value})")
+    elif isinstance(node, BinOp):
+        print(f"{indent}BinOp:")
+        print(f"{indent} left: ")
+        print_ast(node.left, level + 2)
+        print(f"{indent} op: {node.op.type}")
+        print(f"{indent} right: ")
+        print_ast(node.right, level + 2)
+    else:
+        print(f"{indent}Unknown node type: {type(node)}")
+
+
+def main():
+    while True:
+        try:
+            text = input('Введіть вираз (або "exit" для виходу): ')
+            if text.lower() == 'exit':
+                print("Вихід із програми.")
+                break
+            lexer = Lexer(text)
+            parser = Parser(lexer)
+            tree = parser.expr()
+            print_ast(tree)
+        except Exception as e:
+            print(e)
 
 
 if __name__ == '__main__':
