@@ -192,6 +192,38 @@ def print_ast(node, level=0):
         print(f"{indent}Unknown node type: {type(node)}")
 
 
+class Interpreter:
+    def __init__(self, parser):
+        self.parser = parser
+
+    def visit_BinOp(self, node):
+        if node.op.type == TokenType.PLUS:
+            return self.visit(node.left) + self.visit(node.right)
+        elif node.op.type == TokenType.MINUS:
+            return self.visit(node.left) - self.visit(node.right)
+        elif node.op.type == TokenType.MUL:
+            return self.visit(node.left) * self.visit(node.right)
+        elif node.op.type == TokenType.DIV:
+            right_value = self.visit(node.right)
+            if right_value == 0:
+                raise ZeroDivisionError("Ділення на нуль")
+            return self.visit(node.left) / right_value
+
+    def visit_Num(self, node):
+        return node.value
+
+    def interpret(self):
+        tree = self.parser.expr()
+        return self.visit(tree)
+
+    def visit(self, node):
+        method_name = "visit_" + type(node).__name__
+        visitor = getattr(self, method_name, self.generic_visit)
+        return visitor(node)
+
+    def generic_visit(self, node):
+        raise Exception(
+            f"Немає методу для відвідування visit_{type(node).__name__}")
 
 
 def main():
@@ -203,8 +235,9 @@ def main():
                 break
             lexer = Lexer(text)
             parser = Parser(lexer)
-            tree = parser.expr()
-            print_ast(tree)
+            interpreter = Interpreter(parser)
+            result = interpreter.interpret()
+            print(result)
         except Exception as e:
             print(e)
 
