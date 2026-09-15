@@ -27,30 +27,29 @@ def prepare_data(companies, employees, posts) -> tuple[list, list, list]:
 
     for month in range(1, 12 + 1):
         payment_date = datetime(2021, month, randint(10, 20)).date()
-        print("PAYMENT DATE: ", payment_date)
         for emp_id in range(1, len(employees) + 1):
-            for_payments.append((emp_id, payment_date, randint(1000, 10000)))
+            for_payments.append(
+                (emp_id, payment_date.isoformat(), randint(1000, 10000)))
 
     return for_companies, for_employees, for_payments
 
 
 def insert_data_to_db(companies, employees, payments) -> None:
-    with sqlite3.connect("salary.db.db") as con:
+    with sqlite3.connect("salary.db") as con:
         cur = con.cursor()
 
-        sql_to_companies = """INSERT INTO companies(compani_name)
-                              VALUES ?"""
+        sql_to_companies = """INSERT INTO companies(company_name)
+                              VALUES (?)"""
         cur.executemany(sql_to_companies, companies)
-        sql_to_employees = """INSERT INTO employees(employee_name, post, company_id)
+        sql_to_employees = """INSERT INTO employees(employee, post, company_id)
                               VALUES (?, ?, ?)"""
         cur.executemany(sql_to_employees, employees)
         sql_to_payments = """INSERT INTO payments(employee_id, date_of, total)
                              VALUES (?, ?, ?)"""
         cur.executemany(sql_to_payments, payments)
-        con.commit()
 
 
 if __name__ == "__main__":
-    companies, employees, posts = prepare_data(
+    companies, employees, payments = prepare_data(
         *generate_fake_data(NUMBER_COMPANIES, NUMBER_EMPLOYEES, NUMBER_POST))
-    insert_data_to_db(companies, employees, posts)
+    insert_data_to_db(companies, employees, payments)
