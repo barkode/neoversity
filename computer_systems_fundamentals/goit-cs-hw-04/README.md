@@ -22,6 +22,7 @@ keyword_searcher/
 ├── thread_search.py    # search via threads (threading + asyncio + aiofiles)
 ├── process_search.py   # search via processes (multiprocessing + asyncio + aiofiles)
 ├── main.py             # entry point, CLI, mode comparison
+├── config.json         # example configuration file
 └── README.md           # this documentation
 ```
 
