@@ -1,36 +1,35 @@
-# Паралельний пошук ключових слів у текстових файлах
+# Parallel Keyword Search in Text Files
 
-Проєкт демонструє **паралельний пошук ключових слів** у великій кількості\
-текстових файлів двома способами:
+This project demonstrates **parallel keyword searching** across large numbers of\
+text files using two approaches:
 
-* **Потоки** (`threading`) — кожен поток обробляє свою порцію файлів;
+* **Threads** (`threading`) — each thread processes its own chunk of files;
 
-* **Процеси** (`multiprocessing`) — кожен процес обробляє свою порцію файлів.
+* **Processes** (`multiprocessing`) — each process processes its own chunk of files.
 
-У **кожному** потоці/процесі файли читаються **асинхронно** через\
-`asyncio` + `aiofiles` (усі файли порції читаються одночасно через\
-`asyncio.gather`). Наприкінці результати обох режимів можна порівняти за часом.
+Within **each** thread/process, files are read **asynchronously** using\
+`asyncio` + `aiofiles` (all files in the chunk are read concurrently via\
+`asyncio.gather`). At the end, results from both modes can be compared by execution time.
 
 ---
 
-## Структура проєкту
+## Project Structure
 
 ```
 keyword_searcher/
-├── generate_files.py   # генератор тестових .txt файлів
-├── utils.py            # спільні утиліти (розподіл файлів, конфіг, збереження, вивід)
-├── thread_search.py    # пошук через потоки (threading + asyncio + aiofiles)
-├── process_search.py   # пошук через процеси (multiprocessing + asyncio + aiofiles)
-├── main.py             # точка входу, CLI, порівняння режимів
-├── config.json         # приклад конфіг-файлу
-└── README.md           # ця інструкція
+├── generate_files.py   # generator for test .txt files
+├── utils.py            # shared utilities (file distribution, config, saving, output)
+├── thread_search.py    # search via threads (threading + asyncio + aiofiles)
+├── process_search.py   # search via processes (multiprocessing + asyncio + aiofiles)
+├── main.py             # entry point, CLI, mode comparison
+└── README.md           # this documentation
 ```
 
 ---
 
-## Встановлення
+## Installation
 
-Потрібен **Python 3.10+**. Встановіть залежність `aiofiles`:
+Requires **Python 3.10+**. Install the `aiofiles` dependency:
 
 ```bash
 pip install aiofiles
@@ -38,55 +37,55 @@ pip install aiofiles
 
 ---
 
-## Крок 1. Генерація тестових файлів
+## Step 1. Generating Test Files
 
-Скрипт `generate_files.py` створює тестові текстові файли, наповнені\
-випадковими словами (серед яких гарантовано трапляються ключові слова).
+The `generate_files.py` script creates test text files populated with\
+random words (which are guaranteed to include the target keywords).
 
 ```bash
 python generate_files.py --count 30 --words 1000 --output-dir test_files
 ```
 
-### Параметри `generate_files.py`
+### Parameters for `generate_files.py`
 
-| Параметр | За замовчуванням | Опис |
+| Parameter | Default | Description |
 | --- | --- | --- |
-| `--count` | `20` | Кількість файлів для генерації |
-| `--words` | `1000` | Кількість слів у кожному файлі |
-| `--output-dir` | `test_files` | Директорія для збереження файлів |
+| `--count` | `20` | Number of files to generate |
+| `--words` | `1000` | Number of words in each file |
+| `--output-dir` | `test_files` | Directory for saving files |
 
 ---
 
-## Крок 2. Запуск пошуку
+## Step 2. Running the Search
 
-### Варіант А - через аргументи командного рядка
+### Option A — via command-line arguments
 
 ```bash
 python main.py --keywords python asyncio thread --mode both
 ```
 
-Приклад з явним вказанням кількості потоків/процесів та директорії:
+Example with explicit thread/process counts and directory:
 
 ```bash
 python main.py --files-dir test_files --keywords python asyncio queue \
     --threads 4 --processes 4 --mode both --output results.json
 ```
 
-Лише потоки:
+Threads only:
 
 ```bash
 python main.py --keywords python asyncio --mode thread
 ```
 
-Лише процеси:
+Processes only:
 
 ```bash
 python main.py --keywords python asyncio --mode process
 ```
 
-### Варіант Б — через конфіг-файл
+### Option B — via configuration file
 
-Створіть/відредагуйте `config.json`:
+Create/edit `config.json`:
 
 ```json
 {
@@ -99,31 +98,31 @@ python main.py --keywords python asyncio --mode process
 }
 ```
 
-Запустіть:
+Run:
 
 ```bash
 python main.py --config config.json
 ```
 
-> **Важливо:** значення з конфіг-файлу **перекривають** аргументи командного рядка.
+> **Important:** values from the configuration file **override** command-line arguments.
 
 ---
 
-## Параметри `main.py`
+## Parameters for `main.py`
 
-| Параметр | За замовчуванням | Опис |
+| Parameter | Default | Description |
 | --- | --- | --- |
-| `--config` | `None` | Шлях до JSON конфіг-файлу (перекриває CLI) |
-| `--files-dir` | `test_files` | Директорія з текстовими файлами |
-| `--keywords` | `None` | Список ключових слів (через пробіл), напр. `python asyncio` |
-| `--threads` | `None` | Кількість потоків; якщо не задано — `os.cpu_count()` |
-| `--processes` | `None` | Кількість процесів; якщо не задано — `os.cpu_count()` |
-| `--output` | `results.json` | Файл для збереження результатів |
-| `--mode` | `both` | Режим: `thread`, `process` або `both` |
+| `--config` | `None` | Path to JSON configuration file (overrides CLI) |
+| `--files-dir` | `test_files` | Directory containing text files |
+| `--keywords` | `None` | List of keywords (space-separated), e.g. `python asyncio` |
+| `--threads` | `None` | Number of threads; if not specified — `os.cpu_count()` |
+| `--processes` | `None` | Number of processes; if not specified — `os.cpu_count()` |
+| `--output` | `results.json` | File for saving results |
+| `--mode` | `both` | Mode: `thread`, `process` or `both` |
 
 ---
 
-## Формат результатів (`results.json`)
+## Results Format (`results.json`)
 
 ```json
 {
@@ -144,40 +143,40 @@ python main.py --config config.json
 }
 ```
 
-Для кожного режиму зберігається:
+For each mode, the following is stored:
 
-* `elapsed_sec` — витрачений час у секундах;
+* `elapsed_sec` — elapsed time in seconds;
 
-* `results` — словник `{ключове_слово: [список файлів, де воно знайдено]}`.
+* `results` — dictionary `{keyword: [list of files where it was found]}`.
 
 ---
 
-## Швидкий старт (усе разом)
+## Quick Start (all together)
 
 ```bash
-`pip install aiofiles`
-`python generate_files.py --count 30`
-`python main.py --keywords python asyncio thread --mode both`
+pip install aiofiles
+python generate_files.py --count 30
+python main.py --keywords python asyncio thread --mode both
 ```
 
 ---
 
-## Примітки щодо архітектури
+## Architecture Notes
 
-* **Розподіл навантаження.** Файли рівномірно розкидаються між потоками/процесами\
-  за принципом round-robin (`utils.split_files`).
+* **Load distribution.** Files are evenly distributed amongst threads/processes\
+  using a round-robin approach (`utils.split_files`).
 
-* **Асинхронне читання.** Усередині кожного потоку/процесу виклик `asyncio.run(...)`\
-  запускає одночасне читання всіх файлів порції через `aiofiles`.
+* **Asynchronous reading.** Within each thread/process, the call to `asyncio.run(...)`\
+  launches concurrent reading of all files in the chunk via `aiofiles`.
 
-* **Обмін даними.**
+* **Data exchange.**
 
-    * Потоки використовують спільний словник під захистом `threading.Lock`.
+  * Threads use a shared dictionary protected by `threading.Lock`.
 
-    * Процеси передають локальні результати головному процесу через `multiprocessing.Queue`.
+  * Processes pass local results to the main process via `multiprocessing.Queue`.
 
-* **Стійкість до помилок.** Помилки читання окремих файлів (`OSError`/`IOError`)\
-  не зупиняють програму — виводиться попередження `[WARNING]`, робота триває.
+* **Fault tolerance.** Read errors for individual files (`OSError`/`IOError`)\
+  do not halt the programme — a warning `[WARNING]` is displayed, execution continues.
 
-* **Кросплатформність.** `multiprocessing.freeze_support()` викликається перед\
-  `main()` для коректної роботи на Windows.
+* **Cross-platform support.** `multiprocessing.freeze_support()` is called before\
+  `main()` for correct operation on Windows.
