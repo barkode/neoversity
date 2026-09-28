@@ -22,7 +22,6 @@ keyword_searcher/
 ├── thread_search.py    # search via threads (threading + asyncio + aiofiles)
 ├── process_search.py   # search via processes (multiprocessing + asyncio + aiofiles)
 ├── main.py             # entry point, CLI, mode comparison
-├── config.json         # example configuration file
 └── README.md           # this documentation
 ```
 
@@ -177,7 +176,7 @@ python main.py --keywords python asyncio thread --mode both
   * Processes pass local results to the main process via `multiprocessing.Queue`.
 
 * **Fault tolerance.** Read errors for individual files (`OSError`/`IOError`)\
-  do not halt the programme — a warning `[WARNING]` is displayed, execution continues.
+  do not halt the programme - a warning `[WARNING]` is displayed, execution continues.
 
 * **Cross-platform support.** `multiprocessing.freeze_support()` is called before\
   `main()` for correct operation on Windows.

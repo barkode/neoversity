@@ -1,9 +1,9 @@
 """Project entry point: parallel keyword search in text files.
 
 Supports two modes:
-  * thread  — search via threads (threading);
-  * process — search via processes (multiprocessing);
-  * both    — both modes with execution time comparison.
+  * thread  - search via threads (threading);
+  * process - search via processes (multiprocessing);
+  * both    - both modes with execution time comparison.
 
 Settings can be specified via command-line arguments or via
 a JSON configuration file (--config). Configuration file values override CLI.
