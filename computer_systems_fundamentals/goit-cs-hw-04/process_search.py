@@ -1,8 +1,8 @@
-"""Пошук ключових слів за допомогою процесів (multiprocessing).
+"""Keyword search using processes (multiprocessing).
 
-Кожен процес обробляє свою порцію файлів. Усередині процесу файли читаються
-асинхронно через asyncio + aiofiles. Результати кожного процесу передаються
-головному процесу через multiprocessing.Queue і там об'єднуються.
+Each process handles its own chunk of files. Within the process, files are read
+asynchronously via asyncio + aiofiles. Results from each process are passed
+to the main process via multiprocessing.Queue and merged there.
 """
 
 import asyncio
@@ -16,11 +16,11 @@ from utils import split_files
 
 
 async def search_in_file(filepath: str, keywords: list[str]) -> dict[str, bool]:
-    """Асинхронно читає файл і перевіряє наявність кожного ключового слова.
+    """Asynchronously reads a file and checks for the presence of each keyword.
 
-    :param filepath: шлях до файлу
-    :param keywords: список ключових слів
-    :return: словник {ключове_слово: чи_знайдено}
+    :param filepath: path to the file
+    :param keywords: list of keywords
+    :return: dictionary {keyword: found}
     """
     found: dict[str, bool] = {kw: False for kw in keywords}
     try:
@@ -31,19 +31,19 @@ async def search_in_file(filepath: str, keywords: list[str]) -> dict[str, bool]:
             if kw.lower() in content_lower:
                 found[kw] = True
     except (OSError, IOError) as exc:
-        # Проблемний файл не має ламати весь пошук.
-        print(f"  [WARNING] Не вдалося прочитати {filepath}: {exc}")
+        # A problematic file shouldn't break the entire search.
+        print(f"  [WARNING] Failed to read {filepath}: {exc}")
     return found
 
 
 async def search_files_async(
     files: list[str], keywords: list[str]
 ) -> dict[str, list[str]]:
-    """Асинхронно шукає ключові слова у всіх файлах порції.
+    """Asynchronously searches for keywords in all files in the chunk.
 
-    :param files: список файлів для обробки
-    :param keywords: список ключових слів
-    :return: словник {ключове_слово: [файли, де знайдено]}
+    :param files: list of files to process
+    :param keywords: list of keywords
+    :return: dictionary {keyword: [files where found]}
     """
     results: dict[str, list[str]] = {kw: [] for kw in keywords}
 
@@ -62,14 +62,14 @@ def process_worker(
     keywords: list[str],
     queue: "multiprocessing.Queue",
 ) -> None:
-    """Функція, яку виконує окремий процес.
+    """Function executed by a separate process.
 
-    Запускає асинхронний пошук по своїй порції файлів і кладе локальні
-    результати у чергу для головного процесу.
+    Runs asynchronous search on its chunk of files and puts local
+    results into the queue for the main process.
 
-    :param files: порція файлів для цього процесу
-    :param keywords: список ключових слів
-    :param queue: черга для передачі результатів головному процесу
+    :param files: chunk of files for this process
+    :param keywords: list of keywords
+    :param queue: queue for passing results to the main process
     """
     local_results = asyncio.run(search_files_async(files, keywords))
     queue.put(local_results)
@@ -78,16 +78,16 @@ def process_worker(
 def search_with_processes(
     files: list[str], keywords: list[str], num_processes: int | None = None
 ) -> tuple[dict[str, list[str]], float]:
-    """Головна функція пошуку через процеси.
+    """Main search function using processes.
 
-    :param files: список усіх файлів
-    :param keywords: список ключових слів
-    :param num_processes: кількість процесів; якщо None — os.cpu_count()
-    :return: кортеж (словник_результатів, витрачений_час_у_секундах)
+    :param files: list of all files
+    :param keywords: list of keywords
+    :param num_processes: number of processes; if None — os.cpu_count()
+    :return: tuple (results_dictionary, elapsed_time_in_seconds)
     """
     if num_processes is None:
         num_processes = os.cpu_count() or 1
-    # Немає сенсу створювати більше процесів, ніж є файлів.
+    # No point creating more processes than there are files.
     if files:
         num_processes = min(num_processes, len(files))
     num_processes = max(num_processes, 1)
@@ -95,7 +95,7 @@ def search_with_processes(
     final_results: dict[str, list[str]] = {kw: [] for kw in keywords}
     queue: "multiprocessing.Queue" = multiprocessing.Queue()
 
-    # Розбиваємо файли на порції по кількості процесів.
+    # Split files into chunks by number of processes.
     chunks = split_files(files, num_processes)
 
     start = time.perf_counter()
@@ -109,8 +109,8 @@ def search_with_processes(
         p.start()
         processes.append(p)
 
-    # Спершу забираємо всі результати з черги (по одному на процес),
-    # щоб уникнути блокування, і лише потім робимо join().
+    # First, retrieve all results from the queue (one per process)
+    # to avoid blocking, and only then call join().
     for _ in processes:
         local_results = queue.get()
         for kw, file_list in local_results.items():
