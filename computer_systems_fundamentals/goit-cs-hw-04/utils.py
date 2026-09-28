@@ -1,5 +1,5 @@
-"""Спільні утиліти проєкту: розподіл файлів, робота з конфігом,
-збереження та красивий вивід результатів.
+"""Shared project utilities: file distribution, configuration handling,
+saving results and formatted output.
 """
 
 import json
@@ -7,75 +7,75 @@ import os
 
 
 def split_files(files: list[str], n: int) -> list[list[str]]:
-    """Рівномірно розподіляє список файлів між n групами (порціями).
+    """Evenly distributes a list of files amongst n groups (chunks).
 
-    Використовується, щоб розбити всі файли між потоками/процесами.
+    Used to split all files amongst threads/processes.
 
-    :param files: список шляхів до файлів
-    :param n: кількість груп (потоків або процесів)
-    :return: список груп, кожна з яких — список файлів
+    :param files: list of file paths
+    :param n: number of groups (threads or processes)
+    :return: list of groups, each being a list of files
     """
     if n <= 0:
         n = 1
-    # Не створюємо більше груп, ніж є файлів.
+    # Don't create more groups than there are files.
     n = min(n, len(files)) if files else 1
 
     chunks: list[list[str]] = [[] for _ in range(n)]
-    # "Розкидаємо" файли по колу (round-robin) для рівномірності.
+    # "Scatter" files in a round-robin manner for even distribution.
     for idx, filepath in enumerate(files):
         chunks[idx % n].append(filepath)
 
-    # Прибираємо порожні групи (якщо файлів менше за n).
+    # Remove empty groups (if there are fewer files than n).
     return [chunk for chunk in chunks if chunk]
 
 
 def load_config(path: str) -> dict:
-    """Читає JSON конфіг-файл і повертає словник з налаштуваннями.
+    """Reads a JSON configuration file and returns a dictionary of settings.
 
-    :param path: шлях до JSON-файлу
-    :return: словник налаштувань
+    :param path: path to the JSON file
+    :return: dictionary of settings
     """
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
 
 def save_results(data: dict, path: str) -> None:
-    """Зберігає результати у JSON-файл з відступами.
+    """Saves results to a JSON file with indentation.
 
-    :param data: дані для збереження
-    :param path: шлях до вихідного файлу
+    :param data: data to save
+    :param path: path to the output file
     """
     try:
         with open(path, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
-        print(f"  Результати збережено у файл: {path}")
+        print(f"  Results saved to file: {path}")
     except OSError as exc:
-        print(f"  [ERROR] Не вдалося зберегти результати у {path}: {exc}")
+        print(f"  [ERROR] Failed to save results to {path}: {exc}")
 
 
 def print_results(results: dict[str, list[str]], title: str, elapsed: float) -> None:
-    """Красиво виводить результати пошуку у консоль.
+    """Neatly prints search results to the console.
 
-    :param results: словник {ключове_слово: [список файлів]}
-    :param title: заголовок блоку (наприклад, назва режиму)
-    :param elapsed: витрачений час у секундах
+    :param results: dictionary {keyword: [list of files]}
+    :param title: block title (e.g., mode name)
+    :param elapsed: elapsed time in seconds
     """
     print()
     print("=" * 60)
     print(f"  {title}")
     print("=" * 60)
     if not results:
-        print("  Жодного ключового слова не знайдено.")
+        print("  No keywords found.")
     else:
-        # Виводимо ключові слова відсортованими для стабільного вигляду.
+        # Print keywords sorted for stable output.
         for keyword in sorted(results.keys()):
             files = results[keyword]
-            print(f"  '{keyword}': знайдено у {len(files)} файлах")
-            # Показуємо лише перші 3 файли, щоб не засмічувати консоль.
+            print(f"  '{keyword}': found in {len(files)} file(s)")
+            # Show only the first 3 files to avoid cluttering the console.
             for filepath in files[:3]:
                 print(f"       - {os.path.basename(filepath)}")
             if len(files) > 3:
-                print(f"       ... та ще {len(files) - 3} файл(ів)")
+                print(f"       ... and {len(files) - 3} more")
     print("-" * 60)
-    print(f"  Витрачено часу: {elapsed:.4f} секунд")
+    print(f"  Time elapsed: {elapsed:.4f} seconds")
     print("=" * 60)
