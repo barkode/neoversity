@@ -1,0 +1,47 @@
+# ---------------------------------------------------------------------------
+# docker-compose.yaml — defines two services:
+#   app   — the Python web + socket application
+#   mongo — MongoDB database
+# ---------------------------------------------------------------------------
+version: "3.9"
+
+services:
+  # --------------------------------------------------------------------------
+  # Web application (HTTP server on 3000, UDP socket server on 5000)
+  # --------------------------------------------------------------------------
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: web_socket_app
+    ports:
+      - "3003:3000"          # HTTP web server
+      - "5000:5000/udp"      # UDP socket server
+    environment:
+      # Tell the app where to find MongoDB (use the service name as hostname)
+      MONGO_HOST: mongo
+      MONGO_PORT: 27017
+    depends_on:
+      - mongo
+    restart: on-failure
+
+  # --------------------------------------------------------------------------
+  # MongoDB
+  # --------------------------------------------------------------------------
+  mongo:
+    image: mongo:7-jammy
+    container_name: mongo_db
+    ports:
+      - "27017:27017"
+    volumes:
+      # Named volume: data is persisted on the host, NOT inside the container.
+      # This means the database survives container restarts and re-builds.
+      - mongo_data:/data/db
+    restart: always
+
+# ---------------------------------------------------------------------------
+# Named volumes
+# ---------------------------------------------------------------------------
+volumes:
+  mongo_data:
+    driver: local
